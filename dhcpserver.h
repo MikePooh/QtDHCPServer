@@ -104,10 +104,13 @@ public:
 
     bool initializeDHCPServer();
     QVector<DHCPTableEntry> getDhcpTable();
+    bool isRunning();
+    void stopDHCPServer();
 
 signals:
 
     void serverStarted(const QHostAddress& address, const QHostAddress& mask, int prefixLength);
+    void serverStopped();
     void dhcpDatagramReceived(const QByteArray& datagram);
     void dhcpMessageReveived(DHCPMessageType type, const QByteArray& from);
     void dhcpAddressOffered(const QByteArray& chaddr, const QHostAddress& addr);

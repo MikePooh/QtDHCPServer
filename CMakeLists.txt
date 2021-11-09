@@ -14,12 +14,18 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Network REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Network REQUIRED)
 
-add_library(DHCPServer SHARED
+#add_executable(DHCPServer
+#  dhcpserver.h
+#  dhcpserver.cpp
+#  main.cpp
+#)
+
+add_library(DHCPServer OBJECT
   dhcpserver.h
   dhcpserver.cpp
 )
 
 target_link_libraries(DHCPServer
-    Qt${QT_VERSION_MAJOR}::Core
-    Qt${QT_VERSION_MAJOR}::Network
+    PRIVATE Qt${QT_VERSION_MAJOR}::Core
+    PRIVATE Qt${QT_VERSION_MAJOR}::Network
 )

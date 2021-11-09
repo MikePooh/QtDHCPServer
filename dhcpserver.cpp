@@ -37,6 +37,17 @@ QVector<DHCPServer::DHCPTableEntry> DHCPServer::getDhcpTable()
     return m_DHCPTable;
 }
 
+bool DHCPServer::isRunning()
+{
+    return m_socket.state() == QAbstractSocket::BoundState;
+}
+
+void DHCPServer::stopDHCPServer()
+{
+    m_socket.close();
+    emit serverStopped();
+}
+
 void DHCPServer::parseDatagram(const QByteArray &datagram)
 {
     DHCPMessage msg;
