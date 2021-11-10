@@ -48,6 +48,16 @@ void DHCPServer::stopDHCPServer()
     emit serverStopped();
 }
 
+QString DHCPServer::getStartAddressStr()
+{
+    return m_startAddress.toString();
+}
+
+QString DHCPServer::getStopAddressStr()
+{
+    return m_stopAddress.toString();
+}
+
 void DHCPServer::parseDatagram(const QByteArray &datagram)
 {
     DHCPMessage msg;
@@ -211,10 +221,12 @@ void DHCPServer::handleDhcpRequest(const DHCPMessage &request)
         response.options.append({DHCPOption::DHCPLeaseTime, getBytes(m_leaseTime, quint32())});
 
         DHCPTableEntry entry(request.chaddr, address);
-        if (!m_DHCPTable.contains(entry)) m_DHCPTable.append(entry);
+        if (!m_DHCPTable.contains(entry)) {
+            emit dhcpAddressAssigned(request.chaddr, address);
+            m_DHCPTable.append(entry);
+        }
         if (m_offeredAddressesTable.contains(entry)) m_offeredAddressesTable.removeAll(entry);
 
-        emit dhcpAddressAssigned(request.chaddr, address);
     }
     else //NAK
     {
@@ -430,7 +442,7 @@ QHostAddress DHCPServer::getAddress(quint32 requested, const QByteArray& chaddr,
     }
 }
 
-DHCPServer::DHCPServer(QObject *parent) : QObject(parent), m_address([]
+QNetworkAddressEntry DHCPServer::getAddressEntry()
 {
     QNetworkInterface interface;
     foreach (const QNetworkInterface& iface, QNetworkInterface::allInterfaces()) {
@@ -445,7 +457,17 @@ DHCPServer::DHCPServer(QObject *parent) : QObject(parent), m_address([]
             return entry;
     }
     return QNetworkAddressEntry();
-}())
+}
+
+DHCPServer::DHCPServer(QObject *parent) : QObject(parent), m_address(getAddressEntry())
+{
+
+}
+
+DHCPServer::DHCPServer(const QHostAddress &startAddress, const QHostAddress &stopAddress,
+                       const QByteArray &serverName, int leaseTime, QObject *parent) :
+    QObject(parent), m_startAddress(startAddress), m_stopAddress(stopAddress),
+    m_serverName(serverName), m_leaseTime(leaseTime), m_address(getAddressEntry())
 {
 
 }
@@ -456,6 +478,11 @@ DHCPServer::DHCPServer(const QNetworkAddressEntry &address, const QHostAddress &
     m_leaseTime(leaseTime), m_address(address)
 {
 
+}
+
+DHCPServer::~DHCPServer()
+{
+    emit serverStopped();
 }
 
 template<typename T1, typename T2>

@@ -99,13 +99,23 @@ private:
 public:
 
     explicit DHCPServer(QObject *parent = nullptr);
-    explicit DHCPServer(const QNetworkAddressEntry& address, const QHostAddress& startAddress, const QHostAddress& stopAddress,
-                        const QByteArray& serverName, int leaseTime, QObject *parent = nullptr);
+    explicit DHCPServer(const QHostAddress& startAddress = QHostAddress(),
+                        const QHostAddress& stopAddress = QHostAddress(),
+                        const QByteArray& serverName = "DHCP Server",
+                        int leaseTime = 3600, QObject* parent = nullptr);
+    explicit DHCPServer(const QNetworkAddressEntry& address, const QHostAddress& startAddress = QHostAddress(),
+                        const QHostAddress& stopAddress = QHostAddress(),
+                        const QByteArray& serverName = "DHCP Server",
+                        int leaseTime = 3600, QObject* parent = nullptr);
 
+    virtual ~DHCPServer() override;
+    static QNetworkAddressEntry getAddressEntry();
     bool initializeDHCPServer();
     QVector<DHCPTableEntry> getDhcpTable();
     bool isRunning();
     void stopDHCPServer();
+    QString getStartAddressStr();
+    QString getStopAddressStr();
 
 signals:
 
