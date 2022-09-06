@@ -99,6 +99,7 @@ private:
 public:
 
     explicit DHCPServer(QObject *parent = nullptr);
+    explicit DHCPServer(const QNetworkAddressEntry &address, QObject *parent = nullptr);
     explicit DHCPServer(const QHostAddress& startAddress = QHostAddress(),
                         const QHostAddress& stopAddress = QHostAddress(),
                         const QByteArray& serverName = "DHCP Server",

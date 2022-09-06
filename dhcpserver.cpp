@@ -464,6 +464,11 @@ DHCPServer::DHCPServer(QObject *parent) : QObject(parent), m_address(getAddressE
 
 }
 
+DHCPServer::DHCPServer(const QNetworkAddressEntry &address, QObject *parent) : QObject(parent), m_address(address)
+{
+
+}
+
 DHCPServer::DHCPServer(const QHostAddress &startAddress, const QHostAddress &stopAddress,
                        const QByteArray &serverName, int leaseTime, QObject *parent) :
     QObject(parent), m_startAddress(startAddress), m_stopAddress(stopAddress),
