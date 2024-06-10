@@ -26,6 +26,6 @@ add_library(DHCPServer OBJECT
 )
 
 target_link_libraries(DHCPServer
-    PRIVATE Qt${QT_VERSION_MAJOR}::Core
-    PRIVATE Qt${QT_VERSION_MAJOR}::Network
+    PUBLIC Qt${QT_VERSION_MAJOR}::Core
+    PUBLIC Qt${QT_VERSION_MAJOR}::Network
 )
